@@ -11,12 +11,17 @@ const {
   restrictTo,
 } = require("../controllers/authController");
 
+const expenseRouter = require("./expenseRouter");
+
 const router = express.Router();
 
 router.route("/signup").post(signup);
 router.route("/login").post(login);
 
 router.use(protect);
+
+router.use("/:userId/expenses", expenseRouter);
+
 router.use(restrictTo("admin"));
 
 router.route("/").get(getAllUsers);

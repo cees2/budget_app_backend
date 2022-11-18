@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
+const { expenseSchema } = require("./expenseModel");
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -43,14 +44,25 @@ const userSchema = new mongoose.Schema({
     default: Date.now(),
   },
   passwordChangedAt: Date,
+  expenses: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: "Expense",
+    },
+  ],
 });
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 12);
   this.passwordConfirm = null;
+  this.name = `${this.name.slice(0, 1).toUpperCase()}${this.name.slice(1)}`;
   next();
 });
+
+userSchema.methods.assignNewExpenseToUser = function (newExpenseId) {
+  this.expenses.push(newExpenseId);
+};
 
 userSchema.methods.changedPasswordAfter = function (tokenIssueDate) {
   return this.passwordChangedAt > tokenIssueDate;

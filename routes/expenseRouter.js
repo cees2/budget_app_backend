@@ -7,9 +7,13 @@ const {
   createExpense,
 } = require("./../controllers/expenseController");
 
-const router = express.Router();
+const { protect, restrictTo } = require("../controllers/authController");
 
-router.route("/").get(getAllExpenses).post(createExpense);
+const router = express.Router({ mergeParams: true });
+
+router.use(protect);
+
+router.route("/").get(getAllExpenses).post(createExpense); // do poprawy
 router
   .route("/:expenseId")
   .get(getExpense)
