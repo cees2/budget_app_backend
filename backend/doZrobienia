@@ -1,0 +1,4 @@
+getAllExpenses powinno byc dostepne tylko dla admina
+update/delete user's Expense
+crud expensow powinno byc z tokena, nie z Id uzytkownika
+plany i wydatki nie usuwaja sie 
