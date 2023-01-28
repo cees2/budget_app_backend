@@ -13,7 +13,7 @@ const router = express.Router({ mergeParams: true });
 
 router.use(protect);
 
-router.route("/").get(getAllExpenses).post(createExpense); // do poprawy
+router.route("/").get(getAllExpenses).post(createExpense);
 router
   .route("/:expenseId")
   .get(getExpense)

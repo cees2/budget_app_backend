@@ -39,7 +39,7 @@ exports.getPlan = catchAsync(async (request, response, next) => {
 });
 
 exports.createPlan = catchAsync(async (request, response, next) => {
-  const { name, priority, completed } = request.body;
+  const { name, priority, status } = request.body;
   const planOwner = request.params.userId;
 
   const user = await User.findById(planOwner);
@@ -49,7 +49,7 @@ exports.createPlan = catchAsync(async (request, response, next) => {
   const createdPlan = await Plan.create({
     name,
     priority,
-    completed,
+    status,
   });
 
   if (!createdPlan) return next(new AppError("Could not create plan.", 400));
@@ -80,7 +80,9 @@ exports.deletePlan = catchAsync(async (request, response, next) => {
 
   await user.save();
 
-  response.status(204);
+  response.status(200).json({
+    status: "success",
+  });
 });
 
 exports.updatePlan = catchAsync(async (request, response, next) => {

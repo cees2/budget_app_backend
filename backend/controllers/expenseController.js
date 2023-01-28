@@ -5,15 +5,13 @@ const User = require("../models/userModel");
 
 exports.getAllExpenses = catchAsync(async (request, response, next) => {
   let expenses;
-  const { userId } = request.params; //  do poprawy: userId ma byc brany z tokena
+  const { userId } = request.params;
   if (userId) {
-    // not admin
-    // ponizej do poprawy?
     const usersExpenses = await User.findById(userId).populate({
       path: "expenses",
       select: "-__v",
     }); // czy ma byc id expensa wyslane?
-    expenses = usersExpenses.expenses;
+    expenses = usersExpenses.expenses.reverse();
   } else expenses = await Expense.find();
 
   response.status(200).json({
@@ -48,7 +46,7 @@ exports.createExpense = catchAsync(async (request, response, next) => {
 
   const user = await User.findById(expenseOwner);
 
-  if (!user) return next(new AppError("This user does not exist.", 400)); //do poprawy status
+  if (!user) return next(new AppError("This user does not exist.", 400));
 
   const createdExpense = await Expense.create({
     name,
@@ -57,7 +55,7 @@ exports.createExpense = catchAsync(async (request, response, next) => {
   });
 
   if (!createdExpense)
-    return next(new AppError("Could not create expense.", 400)); // do poprawy status
+    return next(new AppError("Could not create expense.", 400));
 
   user.assignNewExpenseToUser(createdExpense.id);
 

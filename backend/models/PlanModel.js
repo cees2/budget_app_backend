@@ -13,8 +13,9 @@ const planSchema = new mongoose.Schema({
     required: [true, "Plan must have a priority"],
     enum: ["High", "Medium", "Low"],
   },
-  completed: {
-    type: Boolean,
+  status: {
+    type: String,
+    enum: ["Active", "Completed", "Incompleted"],
     required: [true, "Plan must have a status"],
   },
   dateCreated: Date,
